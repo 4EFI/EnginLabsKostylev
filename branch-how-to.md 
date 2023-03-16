@@ -1,0 +1,2 @@
+To create a new branch     - use command git branch name_of_branch
+To change betweem branches - use git checkout name_of_branch
