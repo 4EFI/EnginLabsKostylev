@@ -17,7 +17,7 @@ try:
         if( num_str == "q" ):
             print( "Bye :)" )
             break
-        elif( not num_str.isnumeric() ):
+        elif( not num_str.isdigit() ):
             print( "Enter not string..." )
             continue
 
