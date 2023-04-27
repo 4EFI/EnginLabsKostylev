@@ -1,6 +1,7 @@
 
 import RPi.GPIO as GPIO
 import time
+import pygame
 
 def dec2bin( value ):
     return [int(elem) for elem in bin(value)[2:].zfill(8)]
@@ -29,8 +30,19 @@ GPIO.setup ( troyka, GPIO.OUT, initial = 1 )
 GPIO.setup ( comp,   GPIO.IN )
 
 try:
+    start = time.time()
+    file  = open( "data.txt", "w" )
+
+    dt = 0.1
+
+    v = []
+
     while( True ):
-        print( "Voltage is", "{:.3f}".format(adc( dac, comp ) / 256.0 * 3.3, 3) )
+        dt_curr = time.time() - start
+        if( dt_curr >= dt ):
+            start = time.time()
+            v.append( adc( dac, comp ) / 256.0 * 3.3 )
+            print( "Voltage is", "{:.3f}".format(adc( dac, comp ) / 256.0 * 3.3, 3) )
 
 except KeyboardInterrupt:
     print( "\nZachem menia prerval?? AA?" ) 
