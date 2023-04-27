@@ -69,9 +69,6 @@ try:
     print( "Pognali zaregat itot condensator!" )
 
     t = make_arr( t1_arr, v1_arr, 0, -1, 3.11 )    
-    
-    for i in range( len( v1_arr ) ):
-        file.write( "{:.5f}\n".format( v1_arr[i], 3 ) )
 
     print( "Razriadka!" )
 
@@ -82,7 +79,10 @@ try:
     
     make_arr( t2_arr, v2_arr, t, 0.15, -1 )
 
-    print( time.time() - st )
+    file.write( "time {:.5f}\n".format( time.time() - st, 3 ) )
+    
+    for i in range( len( v1_arr ) ):
+        file.write( "{:.5f}\n".format( v1_arr[i], 3 ) )
 
     for i in range( len( v2_arr ) ):
         file.write( "{:.5f}\n".format( v2_arr[i], 3 ) )

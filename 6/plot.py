@@ -2,7 +2,9 @@ import matplotlib.pyplot as plt
 
 data_x = []
 
+
 with open("data.txt", "r") as f:
+    f.readline()
     for x in f.readlines():
         spis = []
         spis = list(map(float, x.split()))
