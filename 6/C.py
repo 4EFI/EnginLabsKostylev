@@ -18,25 +18,11 @@ def adc( dac, comp ):
         
     return 255
 
-GPIO.setmode( GPIO.BCM )
-
-dac    = [ 26, 19, 13, 6, 5, 11, 9, 10 ]
-comp   = 4 
-troyka = 17
-
-GPIO.setup ( dac,    GPIO.OUT )
-GPIO.setup ( troyka, GPIO.OUT, initial = 1 )
-GPIO.setup ( comp,   GPIO.IN )
-
-try:
+def make_arr( t_arr, v_arr, t_start, v_min = -1, v_max = -1 ):
     start = time.time()
-    file  = open( "data.txt", "w" )
+    dt    = 0.1
 
-    dt = 0.1
-    k  = 0
-
-    v_arr = [0]
-    t_arr = [0]
+    k = t_start
 
     while( True ):
         dt_curr = time.time() - start
@@ -51,12 +37,55 @@ try:
 
             print( "Voltage is", "{:.3f}".format( v, 3 ) )
 
-        if( v >= 3 ):
-            break
+        if( v_min != -1 ):
+            if( v <= v_min ):
+                break
+
+        if( v_max != -1 ):
+            if( v >= v_max ):
+                break
     
-    for i in range( len( v_arr ) ):
-        file.write( "{:.2f} ".format( t_arr[i], 3 ) )
-        file.write( "{:.5f}\n".format( v_arr[i], 3 ) )
+    return k
+
+GPIO.setmode( GPIO.BCM )
+
+dac    = [ 26, 19, 13, 6, 5, 11, 9, 10 ]
+comp   = 4 
+troyka = 17
+
+GPIO.setup ( dac,    GPIO.OUT )
+GPIO.setup ( troyka, GPIO.OUT, initial = 1 )
+GPIO.setup ( comp,   GPIO.IN )
+
+try:
+    file = open( "data.txt", "w" )
+
+    dt = 0.1
+    k  = 0
+
+    v1_arr = []
+    t1_arr = []
+
+    print( "Pognali zaregat itot condensator!" )
+
+    t = make_arr( t1_arr, v1_arr, 0, -1, 3 )    
+    
+    for i in range( len( v1_arr ) ):
+        file.write( "{:.2f} ".format(  t1_arr[i], 3 ) )
+        file.write( "{:.5f}\n".format( v1_arr[i], 3 ) )
+
+    print( "Razriadka!" )
+
+    GPIO.output( troyka, 0 )
+
+    v2_arr = []
+    t2_arr = []
+    
+    print( make_arr( t2_arr, v2_arr, t, 0.2, -1 ) )
+
+    for i in range( len( v2_arr ) ):
+        file.write( "{:.2f} ".format(  t2_arr[i], 3 ) )
+        file.write( "{:.5f}\n".format( v2_arr[i], 3 ) )
 
 except KeyboardInterrupt:
     print( "\nZachem menia prerval?? AA?" ) 
