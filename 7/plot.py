@@ -1,38 +1,33 @@
-
 import matplotlib.pyplot as plt
+import matplotlib.ticker as ticker
 import numpy as np
 
-data_u_arr = []
+with open( "settings.txt", "r" ) as settings:
+    tmp = [float(i) for i in settings.read().split( "\n" )]
 
-du = 0
-dt = 0
+data_array = np.loadtxt( "data.txt", dtype=np.double )
 
-with open("settings.txt", "r") as f:
-    du = float( f.readline() )
-    dt = float( f.readline() )
+size       = np.shape(data_array)[0]
+maximum    = data_array.max()
+maxIndex   = np.where (data_array == maximum)
+chargeTime = maxIndex[0][0] * tmp[0]
+time2      = (size - maxIndex[0][0]) * tmp[0]
 
-print( du, dt )
+timeArr = np.arange(size) * tmp[0]
 
-with open("data.txt", "r") as f:
-    for x in f.readlines():
-        data_u_arr.append( list(map(float, x.split())) )
+fig, ax = plt.subplots( figsize=(16, 10) )
 
-data_u = np.array( data_u_arr, dtype=np.double )
-
-data_u *= ( 3.3 / 256 ) 
-
-t = dt * len( data_u )
-
-print( "full time =", t, "sec"  )
-
-print( len(data_u_arr)/82 )
-
-x_main_ticks = []
-
-plt.plot( data_u, "-", lw = 2)
-plt.grid()
-plt.show()
-
-plt.savefig("out.png")
-
-f.close()
+ax.plot(timeArr, data_array, '-', linewidth=2, color='black')
+ax.set_xlabel("Время, c")
+ax.set_ylabel("Напряжение, B")
+ax.set_title("Процесс заряда и разряда конденсатора в RC-цепочке")
+ax.legend ("V(t)")
+ax.text(15, 1,   f"Время заряда t = {chargeTime} c")
+ax.text(15, 0.5, f"Время разряда t = {time2} c")
+ax.yaxis.set_minor_locator(ticker.MultipleLocator(0.1))
+ax.xaxis.set_minor_locator(ticker.MultipleLocator(1))
+ax.set_ylim(0, 3.5)
+ax.set_xlim(0, 150)
+ax.grid( which='minor', linewidth=0.5, linestyle='dashed' )
+ax.grid( which='major', linewidth=1 )
+fig.savefig("plot.png")
