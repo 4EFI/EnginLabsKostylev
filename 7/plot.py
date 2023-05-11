@@ -17,7 +17,7 @@ timeArr = np.arange(size) * tmp[0]
 
 fig, ax = plt.subplots( figsize=(16, 10) )
 
-ax.plot(timeArr, data_array, '-', linewidth=2, color='black')
+ax.plot(timeArr, data_array, 'o', ls="-", linewidth=0.5, color='black', markevery=200 )
 ax.set_xlabel("Время, c")
 ax.set_ylabel("Напряжение, B")
 ax.set_title("Процесс заряда и разряда конденсатора в RC-цепочке")
