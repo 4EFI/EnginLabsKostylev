@@ -1,18 +1,38 @@
 
 import matplotlib.pyplot as plt
+import numpy as np
 
-data_x = []
+data_u_arr = []
+
+du = 0
+dt = 0
+
+with open("settings.txt", "r") as f:
+    du = float( f.readline() )
+    dt = float( f.readline() )
+
+print( du, dt )
 
 with open("data.txt", "r") as f:
-    f.readline()
     for x in f.readlines():
-        spis = []
-        spis = list(map(float, x.split()))
-        data_x.append(spis[0])
+        data_u_arr.append( list(map(float, x.split())) )
 
-print( len(data_x)/82 )
+data_u = np.array( data_u_arr, dtype=np.double )
 
-plt.plot(data_x, ".")
+data_u *= ( 3.3 / 256 ) 
+
+t = dt * len( data_u )
+
+print( "full time =", t, "sec"  )
+
+print( len(data_u_arr)/82 )
+
+x_main_ticks = []
+
+plt.plot( data_u, "-", lw = 2)
+plt.grid()
 plt.show()
+
+plt.savefig("out.png")
 
 f.close()
